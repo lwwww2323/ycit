@@ -1,0 +1,27 @@
+import tensorflow as tf
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Dense, Flatten
+
+# 使用预训练的 VGG16 作为特征提取器
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+
+# 添加新的顶层用于分类
+x = Flatten()(base_model.output)
+x = Dense(256, activation='relu')(x)
+predictions = Dense(2, activation='softmax')(x)  # 假设有两个类别：坑洼和非坑洼
+
+# 构建模型
+model = Model(inputs=base_model.input, outputs=predictions)
+
+# 冻结预训练模型的卷积层
+for layer in base_model.layers:
+    layer.trainable = False
+
+# 编译模型
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# 假设你已经准备好了训练数据
+# train_data 和 train_labels 需要预处理为 Faster R-CNN 所需的格式
+# model.fit(train_data, train_labels, epochs=10, batch_size=32)
