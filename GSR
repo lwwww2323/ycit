@@ -1,0 +1,15 @@
+import cv2
+
+# 读取低分辨率图像
+low_res_image = cv2.imread('low_res_road.jpg')
+
+# 使用 OpenCV 进行图像超分辨率
+sr = cv2.dnn_superres.DnnSuperResImpl_create()
+sr.readModel("EDSR_x3.pb")
+sr.setModel("edsr", 3)
+
+# 生成高分辨率图像
+high_res_image = sr.upsample(low_res_image)
+
+# 保存高分辨率图像
+cv2.imwrite('high_res_road.jpg', high_res_image)
