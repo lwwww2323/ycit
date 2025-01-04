@@ -1,0 +1,26 @@
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+
+# 构建 AlexNet 模型
+model = Sequential([
+    Conv2D(96, (11, 11), strides=4, activation='relu', input_shape=(227, 227, 3)),
+    MaxPooling2D((3, 3), strides=2),
+    Conv2D(256, (5, 5), padding='same', activation='relu'),
+    MaxPooling2D((3, 3), strides=2),
+    Conv2D(384, (3, 3), padding='same', activation='relu'),
+    Conv2D(384, (3, 3), padding='same', activation='relu'),
+    Conv2D(256, (3, 3), padding='same', activation='relu'),
+    MaxPooling2D((3, 3), strides=2),
+    Flatten(),
+    Dense(4096, activation='relu'),
+    Dense(4096, activation='relu'),
+    Dense(2, activation='softmax')  # 假设有两个类别：坑洼和非坑洼
+])
+
+# 编译模型
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# 假设你已经准备好了训练数据
+# train_data 和 train_labels 需要预处理为 AlexNet 所需的格式
+# model.fit(train_data, train_labels, epochs=10, batch_size=32)
